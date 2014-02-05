@@ -3,16 +3,14 @@
 # arguments are all on the initial subroutine line FIXME
 # all input args are typed (no implicit declarations)
 
-parse.f90 <- function(filename)
+parse.fortran <- function(filename, format)
 {
   raw <- readLines(filename)
   raw <- tolower(remove.comments(raw=raw))
   
-  sl <- which(grepl(x=raw, pattern="^(?!end subroutine)subroutine", perl=TRUE))
-  el <- which(grepl(x=raw, pattern="end subroutine"))
-  
-  if (length(sl) != length(el))
-    stop("Couldn't match each 'subroutine' call with 'end subroutine'")
+  linenums <- find.linenums(raw=raw, format=format, filename=filename)
+  sl <- linenums$sl
+  el <- linenums$el
   
   ret <- list(length(sl))
   
@@ -29,8 +27,8 @@ parse.f90 <- function(filename)
     nm <- sub(x=nm, perl=TRUE, pattern="\\((.*)", replacement="")
     
     # arguments
-    args <- get.args(subr=subr)
-    args <- type.args(args=args, subr=subr)
+    args <- get.args(subr=subr, format=format)
+    args <- type.args(args=args, subr=subr, format=format)
     
     # C prototype
     vars <- paste(args, collapse=", ")
