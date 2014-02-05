@@ -23,7 +23,7 @@ remove.comments <- function(raw)
   # leading C
   clean <- gsub(x=clean, pattern="^C.*$", replacement="")
   # *
-  clean <- gsub(x=raw, pattern="^[*].*$", replacement="")
+  clean <- gsub(x=clean, pattern="^[*].*$", replacement="")
   
   return( clean )
 }

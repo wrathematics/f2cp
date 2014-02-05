@@ -1,3 +1,23 @@
+# control for continuation lines
+continuation <- function(loc, subr)
+{
+  ct <- 0L
+  vars <- ""
+  n <- nmatches(x=subr[loc], pattern="&")
+  
+  while (n)
+  {
+    ct <- ct + 1L
+    n <- nmatches(x=subr[loc+ct], pattern="&")
+  }
+  
+  vars <- subr[loc:(loc+ct)]
+  
+  return( vars )
+}
+
+
+
 find.type <- function(arg, subr)
 {
   types <- c("integer", "double precision", "real", "character")
@@ -12,11 +32,13 @@ find.type <- function(arg, subr)
     
     for (loc in type.locs)
     {
+      vars <- continuation(loc=loc, subr=subr)
+      
       # throw away array information on each var
-      vars <- gsub(x=subr, replacement="", pattern="\\([^\\)]*\\)")
+      vars <- gsub(x=vars, replacement="", pattern="\\([^\\)]*\\)")
       
       # get array of vars of given type
-      vars <- unlist(strsplit(vars[loc], split=","))
+      vars <- unlist(strsplit(x=vars, split=","))
       vars <- sub(x=vars, pattern=type, replacement="")
       vars <- unlist(strsplit(x=vars, split=" "))
       vars <- gsub(x=vars, pattern=" ", replacement="")
@@ -29,7 +51,7 @@ find.type <- function(arg, subr)
   }
   
   
-  stop("Couldn't determine variable type")
+  stop(paste("Couldn't determine variable type of", arg))
 }
 
 

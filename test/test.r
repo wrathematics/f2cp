@@ -1,9 +1,12 @@
-source("../R/make_headers.r")
-setwd("../test")
+library(f2cp)
 
-f90 <- system("ls *.f90", intern=TRUE)
+#f90 <- system("ls *.f90", intern=TRUE)
+#filename <- f90[1]
+filename <- "test.f90"
 
-filename <- f90[1]
+
+setwd("~/dev/f2cp/test")
+#debug(f2cp:::find.type)
 
 parse.f90(filename)
 
