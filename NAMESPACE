@@ -1,1 +1,1 @@
-export("parse.f90")
+export("parse.fortran", "f2cp")
